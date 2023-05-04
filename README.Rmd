@@ -1,0 +1,65 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# private
+
+* Functions that are defined in the body of other functions cannot be tested easily
+and clutter the body of the parent function, it's also not always clear if they use
+lexical scoping or not
+* If we move these functions to the namespace they make the codebase harder to
+understand because we lose this relationship
+
+{private} proposes a solution to these problems.
+
+
+## Installation
+
+Install with:
+
+``` r
+remotes::install_github("moodymudskipper/private")
+```
+
+## Example
+
+
+```{r example}
+library(private)
+print_cubed <- function(x) {
+  x |> cube() |> format()
+}
+print_cubed %private% cube <- function(x) {x * square(x)}
+# this works recursively
+print_cubed %private% cube %private% square <- function(x) {x^2}
+print_cubed %private% format <- function(x) {paste("Square value:", x)}
+
+print_cubed(3)
+
+# parents have a printing method
+print_cubed
+
+# children too
+print_cubed %private% format
+
+# they work together
+print_cubed %private% cube
+
+# private closures are not bound to the local environment (the namespace if we're in a package)
+ls()
+
+# we can test the private methods
+(print_cubed %private% cube)(4)
+```
+
