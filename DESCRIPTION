@@ -1,15 +1,15 @@
 Package: private
-Title: What the Package Does (One Line, Title Case)
+Title: private closures for closures
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Antoine", "Fabri", , "antoine.fabri@gmail.com", role = c("aut", "cre"))
+Description: Define private child closures for the parent closures of your namespace to keep your namespace tidy.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Imports: 
+    cli
