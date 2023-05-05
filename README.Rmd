@@ -43,23 +43,43 @@ print_cubed <- function(x) {
 print_cubed %private% cube <- function(x) {x * square(x)}
 # this works recursively
 print_cubed %private% cube %private% square <- function(x) {x^2}
-print_cubed %private% format <- function(x) {paste("Square value:", x)}
+print_cubed %private% format <- function(x) {paste("Cubed value:", x)}
 
 print_cubed(3)
 
-# parents have a printing method
+# printing methods show the class, children and namespace
 print_cubed
 
-# children too
 print_cubed %private% format
 
-# they work together
 print_cubed %private% cube
+
+print_cubed %private% cube %private% square
 
 # private closures are not bound to the local environment (the namespace if we're in a package)
 ls()
+
+ls(environment(print_cubed))
+
+ls(environment(print_cubed %private% cube))
 
 # we can test the private methods
 (print_cubed %private% cube)(4)
 ```
 
+# Private S3 methods
+
+Defining private S3 methods is straightforward
+
+```{r, error = TRUE}
+print_vec  <- function(data) {
+  data <- as.character(data)
+  writeLines(sprintf("%s: %s", seq_along(data), data))
+  invisible(NULL)
+}
+
+print_vec %private% as.character.data.frame <- 
+  function(x, ...) {stop("can't convert a data frame to a character")}
+print_vec(letters[1:3])
+print_vec(cars)
+```
