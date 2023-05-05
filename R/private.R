@@ -1,9 +1,31 @@
+#' Define and access private functions
+#'
+#' These functions provide a convenient way to create namespaces associated with
+#' a given function. This avoids cluttering the main namespace of a package,
+#' prevents name collision and makes the scope of helper functions explicit in the code.
+#'
+#' The first time `%private%<-` is called on a function, its environment (usually
+#' the package's namespace) is changed to be a new namespace, child of its original environment.
+#'
+#' Anytime `%private%<-` is called on a function its environment is populated with
+#' the object defined in the right hand side, which will be bound there and have its environment set there as well
+#' if it's a function.
+#'
+#' `%private%` is called to access the child function from outside, to test it
+#' for instance.
+#'
+#' @param parent The `"private_parent"` function, or the target to be converted to a `"private_parent"`
+#' @param child The name of the object to access or to define in `parent`'s private namespace
+#' @param value An object, often a function.
+#'
 #' @export
+#' @name private
 `%private%` <- function(parent, child) {
   environment(parent)[[as.character(substitute(child))]]
 }
 
 #' @export
+#' @rdname private
 `%private%<-` <- function(parent, child, value) {
   # we work on environments by reference, if `value` is already a private child
   # it means we have a `a %private% b %private% c <- function(...) {...}` call
